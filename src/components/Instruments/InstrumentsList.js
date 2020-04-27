@@ -16,8 +16,10 @@ function InstrumentsList(props) {
   return (
     <React.Fragment>
       <div style={instrumentsStyle}>
-        {props.instrumentList.map((instrument) => (
-          <InstrumentTile
+        {/* {props.instrumentList.map((instrument) => ( */}
+        {Object.values(props.instrumentList).map((instrument) => {
+          // <InstrumentTile
+          return <InstrumentTile
             whenInstrumentClicked={props.onInstrumentSelect}
             whenQuantityChanged={props.onQuantityChanged}
             image={instrument.image}
@@ -29,14 +31,16 @@ function InstrumentsList(props) {
             id={instrument.id}
             key={instrument.id}
           />
-        ))}
-      </div>
+        // ))}
+        })}
+        </div>
     </React.Fragment>
   );
 }
 
 InstrumentsList.propTypes = {
-  instrumentList: PropTypes.array,
+  // instrumentList: PropTypes.array,
+  instrumentList: PropTypes.object,
   onInstrumentSelect: PropTypes.func,
   onQuantityChanged: PropTypes.func,
 };

@@ -3,71 +3,79 @@ import InstrumentsList from "./InstrumentsList";
 import NewInstrumentForm from "./NewInstrumentForm";
 import EditInstrumentForm from "./EditInstrumentForm";
 import InstrumentDetail from "./InstrumentDetail";
-import { v4 } from "uuid";
+// import { v4 } from "uuid";
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 /* Seed Data */
-const masterInstrumentList = [
-  {
-    id: v4(),
-    type: "Guitar",
-    itemName: "The Guitarrro",
-    description: "hard-coded guitar",
-    price: 199.99,
-    quantity: 3,
-    image:
-      "https://images.reverb.com/image/upload/s--hCvA1Gix--/f_auto,t_large/v1559759198/bghge6q0jidiwxumevwe.png",
-  },
-  {
-    id: v4(),
-    type: "Piano",
-    itemName: "El Piano",
-    description: "hard-coded piano",
-    price: 899.99,
-    quantity: 0,
-    image:
-      "https://kawaius.com/wp-content/uploads/2018/04/Kawai-Novus-NV10.jpg",
-  },
-  {
-    id: v4(),
-    type: "Saxophone",
-    itemName: "The In-Stocksophone",
-    description: "this is an example of an in-stock item",
-    price: 699.99,
-    quantity: 8,
-    image:
-      "https://cdn.shoplightspeed.com/shops/612125/files/5871002/image.jpg",
-  },
-  {
-    id: v4(),
-    type: "Piano",
-    itemName: "El Piano Dos",
-    description: "hard-coded piano",
-    price: 899.99,
-    quantity: 1,
-    image:
-      "https://kawaius.com/wp-content/uploads/2018/04/Kawai-Novus-NV10.jpg",
-  },
-  {
-    id: v4(),
-    type: "Guitar",
-    itemName: "The Guitarrito",
-    description: "hard-coded guitar",
-    price: 199.99,
-    quantity: 3,
-    image:
-      "https://images.reverb.com/image/upload/s--hCvA1Gix--/f_auto,t_large/v1559759198/bghge6q0jidiwxumevwe.png",
-  },
-  {
-    id: v4(),
-    type: "Saxophone",
-    itemName: "The Out-of-Stocksophone",
-    description: "this is an example of an out-of-stock item.  It's over 9000!",
-    price: 9000.99,
-    quantity: 0,
-    image:
-      "https://cdn.shoplightspeed.com/shops/612125/files/5871002/image.jpg",
-  },
-];
+// const masterInstrumentList = [
+//   {
+//     // id: v4(),
+//     id: 1,
+//     type: "Guitar",
+//     itemName: "The Guitarrro",
+//     description: "hard-coded guitar",
+//     price: 199.99,
+//     quantity: 3,
+//     image:
+//       "https://images.reverb.com/image/upload/s--hCvA1Gix--/f_auto,t_large/v1559759198/bghge6q0jidiwxumevwe.png",
+//   },
+//   {
+//     // id: v4(),
+//     id: 2,
+//     type: "Piano",
+//     itemName: "El Piano",
+//     description: "hard-coded piano",
+//     price: 899.99,
+//     quantity: 0,
+//     image:
+//       "https://kawaius.com/wp-content/uploads/2018/04/Kawai-Novus-NV10.jpg",
+//   },
+//   {
+//     // id: v4(),
+//     id: 3,
+//     type: "Saxophone",
+//     itemName: "The In-Stocksophone",
+//     description: "this is an example of an in-stock item",
+//     price: 699.99,
+//     quantity: 8,
+//     image:
+//       "https://cdn.shoplightspeed.com/shops/612125/files/5871002/image.jpg",
+//   },
+//   {
+//     // id: v4(),
+//     id: 4,
+//     type: "Piano",
+//     itemName: "El Piano Dos",
+//     description: "hard-coded piano",
+//     price: 899.99,
+//     quantity: 1,
+//     image:
+//       "https://kawaius.com/wp-content/uploads/2018/04/Kawai-Novus-NV10.jpg",
+//   },
+//   {
+//     // id: v4(),
+//     id: 5,
+//     type: "Guitar",
+//     itemName: "The Guitarrito",
+//     description: "hard-coded guitar",
+//     price: 199.99,
+//     quantity: 3,
+//     image:
+//       "https://images.reverb.com/image/upload/s--hCvA1Gix--/f_auto,t_large/v1559759198/bghge6q0jidiwxumevwe.png",
+//   },
+//   {
+//     // id: v4(),
+//     id: 6,
+//     type: "Saxophone",
+//     itemName: "The Out-of-Stocksophone",
+//     description: "this is an example of an out-of-stock item.  It's over 9000!",
+//     price: 9000.99,
+//     quantity: 0,
+//     image:
+//       "https://cdn.shoplightspeed.com/shops/612125/files/5871002/image.jpg",
+//   },
+// ];
 
 /* Styles */
 const controlStyle = {
@@ -87,7 +95,7 @@ class InstrumentsControl extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      masterInstrumentList: masterInstrumentList,
+      // masterInstrumentList: masterInstrumentList,
       selectedInstrument: null,
       addNewInstrumentFormVisible: false,
       editInstrumentFormVisible: false 
@@ -111,29 +119,46 @@ class InstrumentsControl extends React.Component {
     if (newInstrument.image == "") {
       newInstrument.image = "./default-img.jpeg";
     }
-    const newMasterInstrumentList = this.state.masterInstrumentList.concat({
-      id: v4(),
-      ...newInstrument,
-    });
-    this.setState({ masterInstrumentList: newMasterInstrumentList });
+    const {dispatch} = this.props;
+    const {id, instrumentType, itemName, description, price, quantity, image} = newInstrument;
+
+    const action = {
+      type: 'ADD_INSTRUMENT',
+      id: id,
+      instrumentType: instrumentType,
+      itemName: itemName,
+      description: description,
+      price: price,
+      quantity: quantity,
+      image: image
+    }
+
+    dispatch(action);
+
+    // const newMasterInstrumentList = this.state.masterInstrumentList.concat({
+    //   id: v4(),
+    //   ...newInstrument,
+    // });
+    // this.setState({ masterInstrumentList: newMasterInstrumentList });
     this.setState({ addNewInstrumentFormVisible: false });
   };
 
-  handleChangingQuantity = (id, newQuantity) => {
-    const thisInstrument = this.state.masterInstrumentList.filter(
-      (ticket) => ticket.id === id
-    );
-    thisInstrument[0].quantity += newQuantity;
-    if (thisInstrument[0].quantity <= 0) {
-      thisInstrument[0].quantity = 0;
-    }
-    this.setState({ masterInstrumentList: masterInstrumentList});
-  };
+  // handleChangingQuantity = (id, newQuantity) => {
+  //   const thisInstrument = this.state.masterInstrumentList.filter(
+  //     (ticket) => ticket.id === id
+  //   );
+  //   thisInstrument[0].quantity += newQuantity;
+  //   if (thisInstrument[0].quantity <= 0) {
+  //     thisInstrument[0].quantity = 0;
+  //   }
+  //   this.setState({ masterInstrumentList: masterInstrumentList});
+  // };
 
   handleChangingSelectedInstrument = (id) => {
-    const selectedInstrument = this.state.masterInstrumentList.filter(
-      (instrument) => instrument.id === id
-    )[0];
+    // const selectedInstrument = this.state.masterInstrumentList.filter(
+    //   (instrument) => instrument.id === id
+    // )[0];
+    const selectedInstrument = this.props.masterInstrumentList[id];
     this.setState({ selectedInstrument: selectedInstrument });
   };
 
@@ -141,30 +166,51 @@ class InstrumentsControl extends React.Component {
     this.setState({ editInstrumentFormVisible: true });
   };
 
-  handleEditingInstrument = (editedInstrument) => {
+  handleEditingInstrument = (instrumentToEdit) => {
     // Still saving numbers as strings intially
-    editedInstrument.price = parseInt(editedInstrument.price);
-    const quantityNumber = parseInt(editedInstrument.quantity);
+    instrumentToEdit.price = parseInt(instrumentToEdit.price);
+    const quantityNumber = parseInt(instrumentToEdit.quantity);
     if (quantityNumber <= 0) {
-      editedInstrument.quantity = 0;
+      instrumentToEdit.quantity = 0;
     } else {
-      editedInstrument.quantity = quantityNumber;
+      instrumentToEdit.quantity = quantityNumber;
     }
-    const editedInstrumentList = this.state.masterInstrumentList
-      .filter((instrument) => instrument.id !== editedInstrument.id)
-      .concat(editedInstrument);
+    const {dispatch} = this.props;
+    const {id, instrumentType, itemName, description, price, quantity, image} = instrumentToEdit;
+
+    const action = {
+      type: 'ADD_INSTRUMENT',
+      id: id,
+      instrumentType: instrumentType,
+      itemName: itemName,
+      description: description,
+      price: price,
+      quantity: quantity,
+      image: image
+    }
+
+    dispatch(action);  
+    // const editedInstrumentList = this.state.masterInstrumentList
+    //   .filter((instrument) => instrument.id !== editedInstrument.id)
+    //   .concat(editedInstrument);
     this.setState({
-      masterInstrumentList: editedInstrumentList,
+      // masterInstrumentList: editedInstrumentList,
       editInstrumentFormVisible: false,
       selectedInstrument: null,
     });
   };
 
   handleDeletingInstrument = (id) => {
-    const newMasterInstrumentList = this.state.masterInstrumentList.filter(
-      (instrument) => instrument.id !== id
-    );
-    this.setState({ masterInstrumentList: newMasterInstrumentList });
+    const {dispatch} = this.props;
+    const action = {
+      type: 'DELETE_INSTRUMENT',
+      id: id
+    }
+    dispatch(action);  
+    // const newMasterInstrumentList = this.state.masterInstrumentList.filter(
+    //   (instrument) => instrument.id !== id
+    // );
+    // this.setState({ masterInstrumentList: newMasterInstrumentList });
     this.setState({ selectedInstrument: null });
   };
 
@@ -210,7 +256,8 @@ class InstrumentsControl extends React.Component {
           <InstrumentsList
             onInstrumentSelect={this.handleChangingSelectedInstrument}
             onQuantityChanged={this.handleChangingQuantity}
-            instrumentList={this.state.masterInstrumentList}
+            instrumentList={this.props.masterInstrumentList}
+            // instrumentList={this.state.masterInstrumentList}
           />
         ),
         buttonText: "Add Instrument",
@@ -237,5 +284,17 @@ class InstrumentsControl extends React.Component {
     );
   }
 }
+
+InstrumentsControl.propTypes = {
+  masterInstrumentList: PropTypes.object
+}
+
+const mapStateToProps = state => {
+  return {
+    masterInstrumentList: state
+  }
+}
+
+InstrumentsControl = connect(mapStateToProps)(InstrumentsControl);
 
 export default InstrumentsControl;
